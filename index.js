@@ -19,6 +19,38 @@ const getToken = () => {
   return token;
 };
 
+const validateEmail = (req, res, next) => {
+  const { email } = req.body;
+  const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email) {
+    return res.status(400).json({
+      message: 'O campo "email" é obrigatório',
+    });
+  }
+  if (!regexEmail.test(email)) {
+    return res.status(400).json({
+      message: 'O "email" deve ter o formato "email@email.com"',
+    });
+  }
+  next();
+};
+
+const validatePassword = (req, res, next) => {
+  const { password } = req.body;
+  const passwordLength = 6;
+  if (!password) {
+    return res.status(400).json({
+      message: 'O campo "password" é obrigatório',
+    });
+  }
+  if (password.length < passwordLength) {
+    return res.status(400).json({
+      message: 'O "password" deve ter pelo menos 6 caracteres',
+    });
+  }
+  next();
+};
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
@@ -41,7 +73,7 @@ app.get('/talker/:id', async (req, res) => {
     return res.status(200).json(talker);
 });
 
-app.post('/login', (req, res) => {
+app.post('/login', validateEmail, validatePassword, (req, res) => {
   const token = getToken();
   return res.status(200).json({ token });
 });
