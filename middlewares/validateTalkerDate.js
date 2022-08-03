@@ -18,4 +18,4 @@ const validateTalkerDate = (req, res, next) => {
   next();
 };
 
-module.exports = validateTalkerDate;
+module.exports = { validateTalkerDate };

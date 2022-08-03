@@ -13,4 +13,4 @@ const validateTalkerName = (req, res, next) => {
   next();
 };
 
-module.exports = validateTalkerName;
+module.exports = { validateTalkerName };

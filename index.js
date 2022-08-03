@@ -22,6 +22,7 @@ app.get('/', (_request, response) => {
 
 app.get('/talker/search', validateToken, async (req, res) => {
   const { q } = req.query;
+
   const listTalkers = await getTalkers();
 
   if (q === '') {

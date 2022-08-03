@@ -14,4 +14,4 @@ const validateTalkerAge = (req, res, next) => {
   next();
 };
 
-module.exports = validateTalkerAge;
+module.exports = { validateTalkerAge };

@@ -16,4 +16,4 @@ const validateTalkerRate = (req, res, next) => {
   next();
 };
 
-module.exports = validateTalkerRate;
+module.exports = { validateTalkerRate };
