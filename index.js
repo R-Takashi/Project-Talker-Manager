@@ -131,13 +131,28 @@ const validateTalkerRate = (req, res, next) => {
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
   }
-
+  
   next();
 };
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
+});
+
+app.get('/talker/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+
+  const listTalkers = await getTalkers();
+
+  if (q === '') {
+    return res.status(200).json(listTalkers);
+  }
+
+  const searchTalkers = listTalkers
+    .filter((talker) => talker.name.includes(q));
+
+  return res.status(200).json(searchTalkers);
 });
 
 app.get('/talker', async (req, res) => {
