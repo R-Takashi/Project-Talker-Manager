@@ -199,6 +199,14 @@ validateTalkerAge, validateTalkerDate, validateTalkerRate, async (req, res) => {
   return res.status(200).json(talkerInfo);
 });
 
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  const listTalkers = await getTalkers();
+  const removedTalkerList = listTalkers.filter(({ id: talkerId }) => talkerId !== +id);
+  await fs.writeFile('./talker.json', JSON.stringify(removedTalkerList));
+  return res.status(204).end();
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
