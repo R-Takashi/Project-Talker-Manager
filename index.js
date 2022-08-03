@@ -121,7 +121,7 @@ const validateTalkerRate = (req, res, next) => {
   const newTalker = req.body;
   const { talk } = newTalker;
 
-  if (!talk.rate) {
+  if (talk.rate === undefined) {
     return res.status(400).json({
       message: 'O campo "rate" é obrigatório',
     });
@@ -131,6 +131,7 @@ const validateTalkerRate = (req, res, next) => {
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
   }
+
   next();
 };
 
@@ -174,6 +175,28 @@ validateTalkerAge, validateTalkerDate, validateTalkerRate, async (req, res) => {
   listTalkers.push(addTalker);
   await fs.writeFile('./talker.json', JSON.stringify(listTalkers));
   return res.status(201).json(addTalker);
+});
+
+app.put('/talker/:id', validateToken, validateTalkerName,
+validateTalkerAge, validateTalkerDate, validateTalkerRate, async (req, res) => {
+  const { id } = req.params;
+  const listTalkers = await getTalkers();
+  const editTalker = req.body;
+  let talkerInfo = {};
+
+  const editedListTalkers = listTalkers.map((talker) => {
+    if (talker.id === +id) {
+      talkerInfo = {
+        id: talker.id,
+        ...editTalker,
+      };
+      return talkerInfo;
+    }
+    return talker;
+  });
+  await fs.writeFile('./talker.json', JSON.stringify(editedListTalkers));
+
+  return res.status(200).json(talkerInfo);
 });
 
 app.listen(PORT, () => {
